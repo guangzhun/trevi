@@ -145,7 +145,45 @@ const SearchBar = ({ resultPage = false }) => {
 
   const [searchBarQuery, setSearchBarQuery] = useState(searchQuery);
   const [showSuggestionList, setShowSuggestionList] = useState(false);
-
+  const [showFixedFilter, setShowFixedFilter] = useState(false)
+  const [showFilter, setShowFilter] = useState(false)
+  const [filterToShow, setFilterToShow] = useState([])
+  const [filters] = useState([
+    {
+        name:"people",
+        type: "close",
+        values:["Mark","Spicer","James"],
+        defaultValue:"Jhon",
+        displayName: "People"
+    },
+    {
+        name:"car",
+        type:"close",
+        values:["Toyota","Mercedes"],
+        defaultValue:"Mercedes",
+        displayName:"Car"
+    }
+  ])
+  const [fixedFilters, setFixedFilters] = useState([]);
+  // const [filters, setfilters] = useState([
+    // {hello:"hello"},{hii:"hii"}
+        // {
+        // type: "open",
+        // values:[
+        //   "Jhon","James","Fadi"
+        // ], 
+        // defaultValue: "Mark", 
+        // displayName: "People"
+        // },
+        // {
+        // type: "close",
+        // values:[
+        //   "Suzuki","Toyota","Ferrari"
+        // ], 
+        // defaultValue: "Mercedes", 
+        // displayName: "Car"
+        // }
+    // ])
   useEffect(() => {
     const searchCursorURL = getParam("cursor", location.search);
     const searchQueryURL = getParam("q", location.search);
@@ -208,8 +246,20 @@ const SearchBar = ({ resultPage = false }) => {
   };
 
   const onKeyDown = (e) => {
+    const value = e.target.value;
     if (e.keyCode === 13) {
-      openResultPage();
+      filters.forEach((filter)=>{
+        if(value===filter.name){
+          setFixedFilters((prev)=>[...prev, filter.displayName])
+          setShowFixedFilter(true)
+          if(filter.type==='close'){
+            setFilterToShow(filter.values)
+            setShowFilter(true)
+          }
+        }
+      })
+      setSearchBarQuery("")
+      // openResultPage();
     }
   };
 
@@ -236,14 +286,24 @@ const SearchBar = ({ resultPage = false }) => {
       <div className="searchbar-total">
         <div className="searchbar">
           <div className="searchbar-container">
-            <input
-              type="text"
-              name="searchQuery"
-              placeholder="Search Your Cloud"
-              onChange={onInputChange}
-              onKeyDown={onKeyDown}
-              value={searchBarQuery}
-            ></input>
+            { showFixedFilter ?
+              <ul>
+                {fixedFilters.map((filter, index)=>(
+                  <li key={index}>
+                    {filter}
+                  </li>
+                ))}
+              </ul>
+              :<span></span>
+            }
+              <input
+                type="text"
+                name="searchQuery"
+                placeholder="Search Your Cloud"
+                onChange={onInputChange}
+                onKeyDown={onKeyDown}
+                value={searchBarQuery}
+              ></input>
             {showSuggestionList && (
               <ion-icon
                 name="close-outline"
@@ -258,6 +318,19 @@ const SearchBar = ({ resultPage = false }) => {
               onClick={handleSearchIcon}
             ></ion-icon>
           </div>
+        </div>
+        <div style={{display: showFilter?'flex':'none'}}>
+          <ul>
+            {filterToShow.map((filter, index) => (
+              <li key={index} >
+                <button style={{width:'100%'}}
+                // onClick={()=>this.addFilterToTags(tag,index)}
+                >
+                  {filter}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
         <img
           className="searchbar-info"
