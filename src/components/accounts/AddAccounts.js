@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Icon from "../icon/Icon";
 import Provider from "../icon/Provider";
 import { availableAccounts } from "../../config";
+import { testFunction } from "../../redux/actions/test";
 
 const AddAccountsContainer = styled.div`
   .accounts-title {
@@ -60,6 +61,7 @@ const AddAccounts = () => {
   const connectedAccounts = useSelector(
     (store) => store.account.connectedAccount.result.accounts
   );
+  
 
   return (
     <AddAccountsContainer>

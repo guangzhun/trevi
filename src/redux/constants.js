@@ -18,3 +18,4 @@ export const SET_SIGNUPEMAIL = "SET_SIGNUPEMAIL";
 export const SET_SIGNUPPASSWORD = "SET_SIGNUPPASSWORD";
 
 export const SET_SHOWADDACCOUNT = "SET_SHOWADDACCOUNT";
+export const testActionType = "testActionType";
